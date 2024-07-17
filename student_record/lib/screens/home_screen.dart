@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.teal,
         ),
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(top: 8.0,left: 8,right: 8),
           child: ValueListenableBuilder(
               valueListenable: studentNotifier,
               builder: (context, List<StudentData> value, child) {
@@ -52,20 +52,33 @@ class _HomeScreenState extends State<HomeScreen> {
                     });
               }),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showAddStudentDialog(
-              context,
-            );
-          },
-          child: Icon(
-            Icons.add,
-            color: whiteColor,
+        
+        
+        bottomNavigationBar: Container( // Adding a Container as bottomNavigationBar
+          height: 60.0,   // Adjust the height as per your design needs
+          color: Colors.transparent,  
+          // Optionally, make the background transparent
+          child: Padding(
+            padding: const EdgeInsets.only(bottom:  5.0,right: 5,top: 2),    
+            child: Row(mainAxisAlignment: MainAxisAlignment.end,children: [FloatingActionButton(
+            onPressed: () {
+              showAddStudentDialog(
+                context,   
+              );
+            },
+            child: Icon(
+              Icons.add,
+              color: whiteColor,
+            ),
+            backgroundColor: Colors.teal,
+                    ),
+                    ],),   
           ),
-          backgroundColor: Colors.teal,
-        ),
+        ),  
+        
       ),
     );
-  }
+  } 
 }
 
+             

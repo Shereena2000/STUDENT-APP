@@ -3,12 +3,13 @@ import 'package:student_record/constants/const.dart';
 import 'package:student_record/db/functions/add_data.dart';
 import 'package:student_record/db/model/data.dart';
 
-void showAddStudentDialog(BuildContext context,{StudentData? student}) {
+void showAddStudentDialog(BuildContext context, {StudentData? student}) {
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController(text: student?.name ?? '');
   final ageController = TextEditingController(text: student?.age ?? '');
   final placeController = TextEditingController(text: student?.place ?? '');
-  final admissionNoController = TextEditingController(text: student?.admisstionNo??'');
+  final admissionNoController =
+      TextEditingController(text: student?.admisstionNo ?? '');
 
   showDialog(
     context: context,
@@ -16,8 +17,8 @@ void showAddStudentDialog(BuildContext context,{StudentData? student}) {
       final screenSize = MediaQuery.of(context).size;
       return AlertDialog(
         backgroundColor: Colors.teal,
-        title:  Text(          
-         student == null ? 'ADD STUDENT':'EDIT STUDENT',     
+        title: Text(
+          student == null ? 'ADD STUDENT' : 'EDIT STUDENT',
           style: TextStyle(color: whiteColor),
         ),
         content: SingleChildScrollView(
@@ -60,7 +61,8 @@ void showAddStudentDialog(BuildContext context,{StudentData? student}) {
                   TextFormField(
                     controller: ageController,
                     decoration: InputDecoration(
-                      labelText: 'Age',hintText: student?.age ?? 'Enter Age',
+                      labelText: 'Age',
+                      hintText: student?.age ?? 'Enter Age',
                       enabledBorder: customBorder,
                       filled: true,
                       fillColor: whiteColor,
@@ -76,7 +78,8 @@ void showAddStudentDialog(BuildContext context,{StudentData? student}) {
                   TextFormField(
                     controller: placeController,
                     decoration: InputDecoration(
-                      labelText: 'Place',hintText: student?.place ?? 'Enter Place',
+                      labelText: 'Place',
+                      hintText: student?.place ?? 'Enter Place',
                       enabledBorder: customBorder,
                       filled: true,
                       fillColor: whiteColor,
@@ -92,7 +95,9 @@ void showAddStudentDialog(BuildContext context,{StudentData? student}) {
                   TextFormField(
                     controller: admissionNoController,
                     decoration: InputDecoration(
-                      labelText: 'Admission Number', hintText: student?.admisstionNo ?? 'Enter Admission Number',
+                      labelText: 'Admission Number',
+                      hintText:
+                          student?.admisstionNo ?? 'Enter Admission Number',
                       enabledBorder: customBorder,
                       filled: true,
                       fillColor: whiteColor,
@@ -111,19 +116,22 @@ void showAddStudentDialog(BuildContext context,{StudentData? student}) {
                       TextButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                          if (student==null) {
+                            if (student == null) {
                               StudentData student = StudentData(
-                              name: nameController.text,
-                              age: ageController.text,
-                              place: placeController.text,
-                              admisstionNo: admissionNoController.text,
-                            );
-                            
-                            AddStudentData.addToHive(student);
-                          }else{
-                           
-                            AddStudentData.updateData(student);
-                          }
+                                name: nameController.text,
+                                age: ageController.text,
+                                place: placeController.text,
+                                admisstionNo: admissionNoController.text,
+                              );
+
+                              AddStudentData.addToHive(student);
+                            } else {
+                              student.name = nameController.text;
+                              student.age = ageController.text;
+                              student.place = placeController.text;
+                              student.admisstionNo = admissionNoController.text;
+                              AddStudentData.updateData(student);
+                            }
                             Navigator.pop(context);
                           }
                         },
