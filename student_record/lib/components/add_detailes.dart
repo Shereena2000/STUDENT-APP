@@ -3,12 +3,12 @@ import 'package:student_record/constants/const.dart';
 import 'package:student_record/db/functions/add_data.dart';
 import 'package:student_record/db/model/data.dart';
 
-void showAddStudentDialog(BuildContext context) {
+void showAddStudentDialog(BuildContext context,{StudentData? student}) {
   final _formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
-  final ageController = TextEditingController();
-  final placeController = TextEditingController();
-  final admissionNoController = TextEditingController();
+  final nameController = TextEditingController(text: student?.name ?? '');
+  final ageController = TextEditingController(text: student?.age ?? '');
+  final placeController = TextEditingController(text: student?.place ?? '');
+  final admissionNoController = TextEditingController(text: student?.admisstionNo??'');
 
   showDialog(
     context: context,
@@ -16,8 +16,8 @@ void showAddStudentDialog(BuildContext context) {
       final screenSize = MediaQuery.of(context).size;
       return AlertDialog(
         backgroundColor: Colors.teal,
-        title: const Text(
-          'ADD STUDENT',
+        title:  Text(          
+         student == null ? 'ADD STUDENT':'EDIT STUDENT',     
           style: TextStyle(color: whiteColor),
         ),
         content: SingleChildScrollView(
@@ -44,6 +44,7 @@ void showAddStudentDialog(BuildContext context) {
                     controller: nameController,
                     decoration: InputDecoration(
                       labelText: 'Name',
+                      hintText: student?.name ?? 'Enter Name',
                       enabledBorder: customBorder,
                       filled: true,
                       fillColor: whiteColor,
@@ -59,7 +60,7 @@ void showAddStudentDialog(BuildContext context) {
                   TextFormField(
                     controller: ageController,
                     decoration: InputDecoration(
-                      labelText: 'Age',
+                      labelText: 'Age',hintText: student?.age ?? 'Enter Age',
                       enabledBorder: customBorder,
                       filled: true,
                       fillColor: whiteColor,
@@ -75,7 +76,7 @@ void showAddStudentDialog(BuildContext context) {
                   TextFormField(
                     controller: placeController,
                     decoration: InputDecoration(
-                      labelText: 'Place',
+                      labelText: 'Place',hintText: student?.place ?? 'Enter Place',
                       enabledBorder: customBorder,
                       filled: true,
                       fillColor: whiteColor,
@@ -91,7 +92,7 @@ void showAddStudentDialog(BuildContext context) {
                   TextFormField(
                     controller: admissionNoController,
                     decoration: InputDecoration(
-                      labelText: 'Admission Number',
+                      labelText: 'Admission Number', hintText: student?.admisstionNo ?? 'Enter Admission Number',
                       enabledBorder: customBorder,
                       filled: true,
                       fillColor: whiteColor,
@@ -110,15 +111,19 @@ void showAddStudentDialog(BuildContext context) {
                       TextButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            StudentData student = StudentData(
+                          if (student==null) {
+                              StudentData student = StudentData(
                               name: nameController.text,
                               age: ageController.text,
                               place: placeController.text,
                               admisstionNo: admissionNoController.text,
                             );
-                            studentNotifier.value.add(student);
-                            studentNotifier.notifyListeners();
-
+                            
+                            AddStudentData.addToHive(student);
+                          }else{
+                           
+                            AddStudentData.updateData(student);
+                          }
                             Navigator.pop(context);
                           }
                         },

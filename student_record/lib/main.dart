@@ -1,7 +1,18 @@
+
+
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:student_record/db/functions/add_data.dart';
+import 'package:student_record/db/model/data.dart';
 import 'package:student_record/screens/home_screen.dart';
 
-void main() {
+Future<void> main() async {
+ await Hive.initFlutter();
+ if (!Hive.isAdapterRegistered(StudentDataAdapter().typeId)) {
+   Hive.registerAdapter(StudentDataAdapter());
+ }
+ await Hive.openBox<StudentData>('studentBox');
+ AddStudentData.getAllStudent();
   runApp(const MyApp());
 }
 
