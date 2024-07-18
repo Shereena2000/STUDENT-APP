@@ -5,7 +5,6 @@ import 'package:student_record/constants/const.dart';
 import 'package:student_record/db/functions/add_data.dart';
 import 'package:student_record/db/model/data.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -14,71 +13,111 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+  String _searchQuery = '';
+  List<StudentData> _filterStudent(List<StudentData> students, String query) {
+    if (query.isEmpty) {
+      return students;
+    }
+    return students.where((student) {
+      return student.name.toLowerCase().contains(query.toLowerCase()) ||
+          student.admisstionNo.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+  }
 
-  
   @override
   Widget build(BuildContext context) {
-    
     return SafeArea(
-    
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Student Records',
-            style: TextStyle(color: whiteColor),
-          ),
-          actions: const [
-            Icon(Icons.search, color: whiteColor),
-            SizedBox(width: 20),
+          title: _isSearching
+              ? TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                    border: InputBorder.none,
+                  ),
+                  style: TextStyle(color: whiteColor),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                  },
+                )
+              : AnimatedOpacity(
+                  opacity: _isSearching ? 0.0 : 1.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: const Text(
+                    'Student Records',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  if (_isSearching) {
+                    _searchController.clear();
+                    _searchQuery = '';
+                  }
+                  _isSearching = !_isSearching;
+                });
+              },
+              icon: Icon(
+                _isSearching ? Icons.close : Icons.search,
+                color: whiteColor,
+              ),
+            ),
+            const SizedBox(width: 20),
             Icon(Icons.grid_view, color: whiteColor),
             SizedBox(width: 10),
           ],
           backgroundColor: Colors.teal,
         ),
         body: Padding(
-          padding: const EdgeInsets.only(top: 8.0,left: 8,right: 8),
+          padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
           child: ValueListenableBuilder(
               valueListenable: studentNotifier,
               builder: (context, List<StudentData> value, child) {
-                if (value.isEmpty) {
-                  return Center(
+                final filteredStudent =_filterStudent(value, _searchQuery);
+                if (filteredStudent.isEmpty) {
+                  return const Center(
                     child: Text("STUDENT DATA IS EMPTY"),
                   );
                 }
                 return ListView.builder(
-                    itemCount: value.length,
+                    itemCount: filteredStudent.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return StudentTile(student: value[index]);
+                      return StudentTile(student: filteredStudent[index]);
                     });
               }),
         ),
-        
-        
-        bottomNavigationBar: Container( // Adding a Container as bottomNavigationBar
-          height: 60.0,   // Adjust the height as per your design needs
-          color: Colors.transparent,  
-          // Optionally, make the background transparent
+        bottomNavigationBar: Container(
+          height: 60.0,
+          color: Colors.transparent,
           child: Padding(
-            padding: const EdgeInsets.only(bottom:  5.0,right: 5,top: 2),    
-            child: Row(mainAxisAlignment: MainAxisAlignment.end,children: [FloatingActionButton(
-            onPressed: () {
-              showAddStudentDialog(
-                context,   
-              );
-            },
-            child: Icon(
-              Icons.add,
-              color: whiteColor,
+            padding: const EdgeInsets.only(bottom: 5.0, right: 5, top: 2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  onPressed: () {
+                    showAddStudentDialog(
+                      context,
+                    );
+                  },
+                  child: Icon(
+                    Icons.add,
+                    color: whiteColor,
+                  ),
+                  backgroundColor: Colors.teal,
+                ),
+              ],
             ),
-            backgroundColor: Colors.teal,
-                    ),
-                    ],),   
           ),
-        ),  
-        
+        ),
       ),
     );
-  } 
+  }
 }
-
-             
