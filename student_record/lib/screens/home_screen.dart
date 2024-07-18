@@ -22,18 +22,21 @@ class _HomeScreenState extends State<HomeScreen> {
     if (query.isEmpty) {
       return students;
     }
-    return students.where((student) {
-      return student.name.toLowerCase().contains(query.toLowerCase()) ||
-          student.admisstionNo.toLowerCase().contains(query.toLowerCase());
-    }).toList();
+    return students.where(
+      (student) {
+        return student.name.toLowerCase().contains(query.toLowerCase()) ||
+            student.admisstionNo.toLowerCase().contains(query.toLowerCase());
+      },
+    ).toList();
   }
-@override
+
+  @override
   void dispose() {
-    
     // TODO: implement dispose
     super.dispose();
-    _searchController.dispose();  
+    _searchController.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -42,15 +45,17 @@ class _HomeScreenState extends State<HomeScreen> {
           title: _isSearching
               ? TextField(
                   controller: _searchController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Search...',
                     border: InputBorder.none,
                   ),
-                  style: TextStyle(color: whiteColor),
+                  style: const TextStyle(color: whiteColor),
                   onChanged: (value) {
-                    setState(() {
-                      _searchQuery = value;
-                    });
+                    setState(
+                      () {
+                        _searchQuery = value;
+                      },
+                    );
                   },
                 )
               : AnimatedOpacity(
@@ -79,14 +84,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(width: 20),
             IconButton(
-                onPressed: () {
-                  setState(() {
-                    _isGridView=!_isGridView;
-                  });
-                },
-                icon: Icon(_isGridView ? Icons.view_list_outlined  : Icons.grid_view,
-                    color: whiteColor)),
-            SizedBox(width: 10),
+              onPressed: () {
+                setState(() {
+                  _isGridView = !_isGridView;
+                });
+              },
+              icon: Icon(
+                  _isGridView ? Icons.view_list_outlined : Icons.grid_view,
+                  color: whiteColor),
+            ),
+            sizedboxh10,
           ],
           backgroundColor: Colors.teal,
         ),
@@ -98,24 +105,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 final filteredStudent = _filterStudent(value, _searchQuery);
                 if (filteredStudent.isEmpty) {
                   return const Center(
-                    child: Text("STUDENT DATA IS EMPTY!!!",style: TextStyle(color: tealColor,fontWeight: FontWeight.bold),),
+                    child: Text(
+                      "STUDENT DATA IS EMPTY!!!",
+                      style: TextStyle(
+                          color: tealColor, fontWeight: FontWeight.bold),
+                    ),
                   );
                 }
-                return !_isGridView ? ListView.builder(
-                    itemCount: filteredStudent.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return StudentTile(student: filteredStudent[index]);
-                    }):GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 8.0,
-                        crossAxisSpacing: 8.0,
-                      ),
-                      itemCount: filteredStudent.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return StudentGridTile(student: filteredStudent[index],);
-                      },
-                    );
+                return !_isGridView
+                    ? ListView.builder(
+                        itemCount: filteredStudent.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return StudentTile(student: filteredStudent[index]);
+                        })
+                    : GridView.builder(
+                        gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 8.0,
+                          crossAxisSpacing: 8.0,
+                        ),
+                        itemCount: filteredStudent.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return StudentGridTile(
+                            student: filteredStudent[index],
+                          );
+                        },
+                      );
               }),
         ),
         bottomNavigationBar: Container(

@@ -24,10 +24,11 @@ class StudentTile extends StatelessWidget {
             onTap: () {
               viewDialoge(context, student);
             },
-            leading:CircleAvatar(
+            leading: CircleAvatar(
               backgroundImage: student.imagePath != null
                   ? FileImage(File(student.imagePath!))
-                  : AssetImage("assets/images/avathara.jpeg") as ImageProvider,
+                  : const AssetImage("assets/images/avathara.jpeg")
+                      as ImageProvider,
             ),
             title: Text(
               student.name,
@@ -39,25 +40,25 @@ class StudentTile extends StatelessWidget {
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [ 
-                IconButton(onPressed: () {
-                  showAddStudentDialog(context,student: student);
-                },
-             icon: Icon( Icons.edit,
-                  color: whiteColor,)    
-                ),
-                SizedBox(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      showAddStudentDialog(context, student: student);
+                    },
+                    icon: const Icon(
+                      Icons.edit,
+                      color: whiteColor,
+                    )),
+                const SizedBox(
                   width: 10,
                 ),
                 IconButton(
                   onPressed: () {
                     if (student.id != null) {
                       AddStudentData.deletData(student.id!);
-                    } else {
-                      print('Id is null,cannot delete');
                     }
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.delete,
                     color: whiteColor,
                   ),

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:student_record/components/add_detailes.dart';
 import 'package:student_record/components/view_details.dart';
@@ -25,19 +24,19 @@ class StudentGridTile extends StatelessWidget {
           child: Column(
             children: [
               ClipOval(
-                child:student.imagePath != null 
-                  ? Image.file(
-                      File(student.imagePath!),
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                    )
-                  : Image.asset(
-                      'assets/images/avathara.jpeg',
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                    ),
+                child: student.imagePath != null
+                    ? Image.file(
+                        File(student.imagePath!),
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(
+                        'assets/images/avathara.jpeg',
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                      ),
               ),
               sizedboxh10,
               Text(
@@ -53,19 +52,21 @@ class StudentGridTile extends StatelessWidget {
                 children: [
                   IconButton(
                       onPressed: () {
-                        showAddStudentDialog(context,student: student);
+                        showAddStudentDialog(context, student: student);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.edit,
                         color: whiteColor,
                       )),
                   IconButton(
-                      onPressed: () { if (student.id != null) {
-                      AddStudentData.deletData(student.id!);
-                    } else {
-                      print('Id is null,cannot delete');
-                    }},
-                      icon: Icon(
+                      onPressed: () {
+                        if (student.id != null) {
+                          AddStudentData.deletData(student.id!);
+                        } else {
+                          print('Id is null,cannot delete');
+                        }
+                      },
+                      icon: const Icon(
                         Icons.delete,
                         color: whiteColor,
                       )),

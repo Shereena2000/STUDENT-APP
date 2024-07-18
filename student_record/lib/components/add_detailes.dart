@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:student_record/constants/const.dart';
@@ -14,7 +13,8 @@ void showAddStudentDialog(BuildContext context, {StudentData? student}) {
   final admissionNoController =
       TextEditingController(text: student?.admisstionNo ?? '');
   final ImagePicker _picker = ImagePicker();
-  XFile? _image;
+  XFile? _image =
+      student?.imagePath != null ? XFile(student!.imagePath!) : null;
   Future<void> _pickImage() async {
     final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
@@ -30,7 +30,7 @@ void showAddStudentDialog(BuildContext context, {StudentData? student}) {
         backgroundColor: Colors.teal,
         title: Text(
           student == null ? 'ADD STUDENT' : 'EDIT STUDENT',
-          style: TextStyle(color: whiteColor),
+          style: const TextStyle(color: whiteColor),
         ),
         content: SingleChildScrollView(
           child: Container(
@@ -43,20 +43,30 @@ void showAddStudentDialog(BuildContext context, {StudentData? student}) {
                   Stack(
                     children: [
                       Container(
-                          height: 90,
-                          width: 90,
-                          child: _image == null 
-                              ? 
-                              ClipRRect(
-                                  borderRadius: BorderRadius.circular(45),
-                                  child: Image.asset(
-                                    "assets/images/add.jpeg",
-                                    fit: BoxFit.cover,
+                        height: 90,
+                        width: 90,
+                        child: _image == null && student?.imagePath == null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(45),
+                                child: Image.asset(
+                                  "assets/images/add.jpeg",
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : student?.imagePath != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(45),
+                                    child:
+                                        Image.file(File(student!.imagePath!)),
+                                  )
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(45),
+                                    child: Image.file(
+                                      File(_image!.path),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ):ClipRRect(
-                                  borderRadius: BorderRadius.circular(45),
-                                  child: Image.file(File(_image!.path), fit: BoxFit.cover,),
-                                ),),
+                      ),
                       Positioned(
                           bottom: -4,
                           right: -2,
@@ -65,11 +75,11 @@ void showAddStudentDialog(BuildContext context, {StudentData? student}) {
                             child: Container(
                               height: 25,
                               width: 25,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.camera_alt,
                                 color: Colors.black,
                               ),
@@ -155,12 +165,11 @@ void showAddStudentDialog(BuildContext context, {StudentData? student}) {
                           if (_formKey.currentState!.validate()) {
                             if (student == null) {
                               StudentData student = StudentData(
-                                name: nameController.text,
-                                age: ageController.text,
-                                place: placeController.text,
-                                admisstionNo: admissionNoController.text,
-                                imagePath: _image?.path
-                              );
+                                  name: nameController.text,
+                                  age: ageController.text,
+                                  place: placeController.text,
+                                  admisstionNo: admissionNoController.text,
+                                  imagePath: _image?.path);
 
                               AddStudentData.addToHive(student);
                             } else {
@@ -168,14 +177,13 @@ void showAddStudentDialog(BuildContext context, {StudentData? student}) {
                               student.age = ageController.text;
                               student.place = placeController.text;
                               student.admisstionNo = admissionNoController.text;
-                              student.imagePath=_image?.path;
+                              student.imagePath = _image?.path;
                               AddStudentData.updateData(student);
-
                             }
                             Navigator.pop(context);
                           }
                         },
-                        child: const Text('Save'),
+                        child: Text('Save'),
                         style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.white),
