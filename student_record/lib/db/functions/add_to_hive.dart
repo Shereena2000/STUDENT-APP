@@ -30,6 +30,8 @@ class AddStudentData extends ChangeNotifier {
   static Future<void> updateData(StudentData student) async {
     final box = await Hive.openBox<StudentData>('studentBox');
     await box.put(student.id, student);
+    
     getAllStudent();
+
   }
 }

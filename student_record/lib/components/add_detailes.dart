@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_record/constants/const.dart';
-import 'package:student_record/db/functions/add_data.dart';
+import 'package:student_record/db/functions/add_to_hive.dart';
 import 'package:student_record/db/model/data.dart';
 
 void showAddStudentDialog(BuildContext context, {StudentData? student}) {

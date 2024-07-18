@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:student_record/db/functions/add_data.dart';
+import 'package:student_record/db/functions/add_to_hive.dart';
 import 'package:student_record/db/model/data.dart';
 import 'package:student_record/screens/home_screen.dart';
 
