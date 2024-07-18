@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 final filteredStudent = _filterStudent(value, _searchQuery);
                 if (filteredStudent.isEmpty) {
                   return const Center(
-                    child: Text("STUDENT DATA IS EMPTY"),
+                    child: Text("STUDENT DATA IS EMPTY!!!",style: TextStyle(color: tealColor,fontWeight: FontWeight.bold),),
                   );
                 }
                 return !_isGridView ? ListView.builder(

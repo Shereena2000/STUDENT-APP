@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:student_record/components/add_detailes.dart';
 import 'package:student_record/components/view_details.dart';
@@ -23,8 +24,10 @@ class StudentTile extends StatelessWidget {
             onTap: () {
               viewDialoge(context, student);
             },
-            leading: CircleAvatar(
-              backgroundImage: AssetImage("assets/images/avathara.jpeg"),
+            leading:CircleAvatar(
+              backgroundImage: student.imagePath != null
+                  ? FileImage(File(student.imagePath!))
+                  : AssetImage("assets/images/avathara.jpeg") as ImageProvider,
             ),
             title: Text(
               student.name,

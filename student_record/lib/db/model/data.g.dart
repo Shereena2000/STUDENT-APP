@@ -22,13 +22,14 @@ class StudentDataAdapter extends TypeAdapter<StudentData> {
       place: fields[2] as String,
       admisstionNo: fields[3] as String,
       id: fields[4] as int?,
+      imagePath: fields[5] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, StudentData obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class StudentDataAdapter extends TypeAdapter<StudentData> {
       ..writeByte(3)
       ..write(obj.admisstionNo)
       ..writeByte(4)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(5)
+      ..write(obj.imagePath);
   }
 
   @override

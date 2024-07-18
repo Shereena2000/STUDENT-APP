@@ -11,13 +11,15 @@ class StudentData {
   String place;
   @HiveField(3)
   String admisstionNo;
-
   @HiveField(4)
   int? id;
+  @HiveField(5)
+  String? imagePath;
   StudentData(
       {required this.name,
       required this.age,
       required this.place,
       required this.admisstionNo,
-      this.id});
+      this.id,
+      this.imagePath});
 }

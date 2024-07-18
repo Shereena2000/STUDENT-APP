@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:student_record/constants/const.dart';
 import 'package:student_record/db/functions/add_to_hive.dart';
 import 'package:student_record/db/model/data.dart';
@@ -10,6 +13,14 @@ void showAddStudentDialog(BuildContext context, {StudentData? student}) {
   final placeController = TextEditingController(text: student?.place ?? '');
   final admissionNoController =
       TextEditingController(text: student?.admisstionNo ?? '');
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
+  Future<void> _pickImage() async {
+    final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      _image = pickedImage;
+    }
+  }
 
   showDialog(
     context: context,
@@ -29,16 +40,42 @@ void showAddStudentDialog(BuildContext context, {StudentData? student}) {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    height: 50,
-                    width: 50,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Image.asset(
-                        "assets/images/add.jpeg",
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                  Stack(
+                    children: [
+                      Container(
+                          height: 90,
+                          width: 90,
+                          child: _image == null 
+                              ? 
+                              ClipRRect(
+                                  borderRadius: BorderRadius.circular(45),
+                                  child: Image.asset(
+                                    "assets/images/add.jpeg",
+                                    fit: BoxFit.cover,
+                                  ),
+                                ):ClipRRect(
+                                  borderRadius: BorderRadius.circular(45),
+                                  child: Image.file(File(_image!.path), fit: BoxFit.cover,),
+                                ),),
+                      Positioned(
+                          bottom: -4,
+                          right: -2,
+                          child: GestureDetector(
+                            onTap: _pickImage,
+                            child: Container(
+                              height: 25,
+                              width: 25,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.camera_alt,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ))
+                    ],
                   ),
                   sizedboxh10,
                   TextFormField(
@@ -122,6 +159,7 @@ void showAddStudentDialog(BuildContext context, {StudentData? student}) {
                                 age: ageController.text,
                                 place: placeController.text,
                                 admisstionNo: admissionNoController.text,
+                                imagePath: _image?.path
                               );
 
                               AddStudentData.addToHive(student);
@@ -130,7 +168,9 @@ void showAddStudentDialog(BuildContext context, {StudentData? student}) {
                               student.age = ageController.text;
                               student.place = placeController.text;
                               student.admisstionNo = admissionNoController.text;
+                              student.imagePath=_image?.path;
                               AddStudentData.updateData(student);
+
                             }
                             Navigator.pop(context);
                           }
